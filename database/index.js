@@ -6,9 +6,9 @@ let connection = mysql.createConnection({
     password : "liu107923",
     database : "test"
 });
-
 connection.connect();
 
+/*
 //创建表
 connection.query("CREATE TABLE websites(Id int,name varchar(255),url varchar(255),alexa varchar(255),country varchar(255))", function (err, result) {
     if(err){
@@ -71,4 +71,6 @@ connection.query(delSql,function (err, result) {
 });
 
 
-connection.end();
+connection.end();*/
+
+module.exports = connection;
