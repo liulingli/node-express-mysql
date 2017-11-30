@@ -1,6 +1,7 @@
 let express = require('express');
 let router = express.Router();
 let connection = require('../database');
+let uuid = require('../public/uuid');
 
 /* GET users listing. */
 //获取用户列表
@@ -13,19 +14,17 @@ router.get('/', function(req, res, next) {
 router.post('/',function(req,res,next){
     let username = req.body.userName;
     let password = req.body.password;
+    let id = uuid(8,10);
     //插入数据
-    let addSql = "INSERT INTO users(username,password) VALUES(?,?)";
-    let addSqlParams = [username,password];
-    console.log("addSqlParams",addSqlParams)
+    let addSql = "INSERT INTO users(username,password,id) VALUES(?,?,?)";
+    let addSqlParams = [username,password,id];
+    console.log("addSqlParams",addSqlParams);
     connection.query(addSql,addSqlParams,function(err,result){
         if(err){
-            console.log('[INSERT ERROR] - ',err.message);
+            res.json({success:false,result:{message:result.message}});
             return;
         }
-        console.log('--------------------------INSERT----------------------------');
-        console.log('INSERT ID:',result);
-        res.json({success:true,result:result})
-        console.log('-----------------------------------------------------------------\n\n');
+        res.json({success:true,result:{username:username,password:password,id:id}})
     });
 })
 
