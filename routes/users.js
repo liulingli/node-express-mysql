@@ -6,8 +6,15 @@ let uuid = require('../public/uuid');
 /* GET users listing. */
 //获取用户列表
 router.get('/', function(req, res, next) {
-  //res.send('respond with a resource');
-    res.json({success:true})
+    var  sql = 'SELECT * FROM users';
+    connection.query(sql,function (err, result) {
+        if(err){
+            res.json({success:false,message:err.message,result:result})
+            return;
+        }
+        res.json({success:true,message:'成功',result:result})
+    });
+
 });
 
 //新增用户
