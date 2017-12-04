@@ -4,7 +4,8 @@ let connection = mysql.createConnection({
     port: '3306',
     user : "root",
     password : "liu107923",
-    database : "test"
+    database : "test",
+    multipleStatements: true //允许多条语句查询
 });
 connection.connect();
 
