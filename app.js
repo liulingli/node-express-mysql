@@ -5,7 +5,7 @@ let logger = require('morgan');
 let cookieParser = require('cookie-parser');
 let bodyParser = require('body-parser');
 let lessMiddleware = require('less-middleware');
-
+let token = require('./public/token');
 let index = require('./routes/index');
 let users = require('./routes/users');
 
@@ -34,6 +34,14 @@ app.use(bodyParser.urlencoded({extended: false}));
 app.use(cookieParser());
 app.use(lessMiddleware(path.join(__dirname, 'public')));
 app.use(express.static(path.join(__dirname, 'public')));
+
+//验证token登录中间件
+app.use('/users',function(req,res,next){
+    console.log(req,res);
+    const token = req.params.token?req.query.token?req:"";
+
+    next();
+});
 
 app.use('/', index);
 app.use('/users', users);

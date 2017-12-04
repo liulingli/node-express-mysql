@@ -42,7 +42,8 @@ router.post('/',function(req,res,next){
             res.json({success:false,result:{message:result.message}});
             return;
         }
-        res.json({success:true,result:{username:username,password:password}})
+        const tokenStr = token.encodeToken(result,100000);
+        res.json({success:true,result:{username:username,password:password},token:tokenStr})
     });
 })
 
@@ -68,7 +69,7 @@ router.put('/',function(req,res,next){
 
 //删除用户
 router.delete('/:id',function(req,res,next){
-    let delSql = 'DELETE FROM users where user_id='+req.parms.id;
+    let delSql = 'DELETE FROM users where user_id='+req.params.id;
     connection.query(delSql,function (err, result) {
         if(err){
             console.log('[DELETE ERROR] - ',err.message);

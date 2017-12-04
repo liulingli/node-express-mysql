@@ -55,7 +55,7 @@ const token = {
      * @returns {boolean}
      */
     checkToken:function(tokenStr){
-        var resDecode=this.decodeToken(tokenStr);
+        const resDecode=this.decodeToken(tokenStr);
         if(!resDecode){
             return false;
         }

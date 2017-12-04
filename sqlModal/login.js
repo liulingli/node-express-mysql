@@ -1,4 +1,5 @@
 let connection = require('../database');
+let token = require('../public/token');
 
 const login =(param) =>{
     return new Promise((resolve,reject)=>{
@@ -13,7 +14,8 @@ const login =(param) =>{
                 resolve({success:false, code:-1, result:result})
             }else{
                 if(result[0].password == param.password){ //成功登录 code = 1
-                    resolve({success:true, code:1, result:result})
+                    const tokenStr = token.encodeToken(result,100000);
+                    resolve({success:true, code:1, result:result,token:tokenStr})
                 }else{ //密码错误 code = -2
                     resolve({success:false, code:-2, result:result})
                 }
