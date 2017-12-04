@@ -17,7 +17,7 @@ const token = {
         const base64Str = Buffer.from(JSON.stringify(tokenJson), 'utf8').toString('base64');
         //添加签名、防篡改
         const secret = 'www.liulinling.site';
-        let hash = crypto.createHmac('sha256', secret);
+        let hash = crypto.createHash('sha256', secret);
         hash.update(base64Str);
         const signature = hash.digest('base64');
         return  base64Str + '.' + signature;
@@ -40,7 +40,7 @@ const token = {
          }
          //检验签名
         const secret="hel.h-five.com";
-        let hash=crypto.createHmac('sha256',secret);
+        let hash=crypto.createHash('sha256',secret);
         hash.update(tokenArray[0]);
         let checkSignature=hash.digest('base64');
         return {
