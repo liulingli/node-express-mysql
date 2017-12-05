@@ -37,9 +37,11 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 //验证token登录中间件
 app.use('/users',function(req,res,next){
-    console.log(req,res);
-    const token = req.params.token?req.query.token?req:"";
-
+    console.log(req);
+    const tokenStr = req.params.token||req.query.token||req.headers.token||"";
+    if(!token.checkToken(tokenStr)){
+        res.json({success:false,message:"无效token"});
+    }
     next();
 });
 

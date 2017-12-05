@@ -14,8 +14,8 @@ const login =(param) =>{
                 resolve({success:false, code:-1, result:result})
             }else{
                 if(result[0].password == param.password){ //成功登录 code = 1
-                    const tokenStr = token.encodeToken(result,100000);
-                    resolve({success:true, code:1, result:result,token:tokenStr})
+                    const tokenStr = token.encodeToken(result[0],100000);
+                    resolve({success:true, code:1, result:result[0],token:tokenStr})
                 }else{ //密码错误 code = -2
                     resolve({success:false, code:-2, result:result})
                 }
