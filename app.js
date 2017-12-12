@@ -8,16 +8,24 @@ let lessMiddleware = require('less-middleware');
 let token = require('./public/token');
 let index = require('./routes/index');
 let users = require('./routes/users');
+let blog = require('./routes/blog');
 
 let app = express();
 
 let mysql = require("mysql");
-let connection = mysql.createConnection({
+/*let connection = mysql.createConnection({
     host : "localhost",
     port: '3306',
     user : "root",
     password : "liu107923",
     database : "test"
+});*/
+let connection = mysql.createConnection({
+    host : "sql9.freemysqlhosting.net",
+    port: '3306',
+    user : "sql9210308",
+    password : "Rrj8eqc97M",
+    database : "sql9210308"
 });
 
 connection.connect();
@@ -37,16 +45,17 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 //验证token登录中间件
 app.use('/users',function(req,res,next){
-    console.log(req);
+   /* console.log(req);
     const tokenStr = req.params.token||req.query.token||req.headers.token||"";
     if(!token.checkToken(tokenStr)){
         res.json({success:false,message:"无效token"});
-    }
+    }*/
     next();
 });
 
 app.use('/', index);
 app.use('/users', users);
+app.use('/blog', blog);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {

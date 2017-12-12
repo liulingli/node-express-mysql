@@ -3,15 +3,15 @@ let router = express.Router();
 let connection = require('../database');
 
 //获取博客列表
-//获取用户列表
 router.get('/', function(req, res, next) {
     let pageSize = req.query.pageSize||20;
     let curPage = req.query.curPage;
     if(!curPage){
         res.json({success:false,code:-1,message:"没有传入参数curPage"})   //
     }
+    curPage = parseInt(curPage);
     let start = (curPage - 1)*pageSize;
-    let sql = 'SELECT COUNT(*) FROM users;SELECT * FROM users limit ' + start +','+pageSize;
+    let sql = 'SELECT COUNT(*) FROM blog;SELECT * FROM blog limit ' + start +','+pageSize;
     connection.query(sql,function (err, result) {
         // console.log(err,result)
         if(err){
@@ -25,7 +25,7 @@ router.get('/', function(req, res, next) {
     });
 });
 
-//新增博客用户
+//新增博客
 router.post('/',function(req,res,next){
     let username = req.body.username;
     let password = req.body.password;
@@ -47,8 +47,14 @@ router.post('/',function(req,res,next){
 
 //获取博客信息
 router.get('/:id', function(req, res, next) {
-    //res.send('respond with a resource');
-    res.json({success:true})
+    let sql = 'SELECT * FROM blog WHERE tid='+req.params.id;
+    connection.query(sql,function (err, result) {
+        if(err){
+            res.json({success:false,result:{message:result.message}});
+            return;
+        }
+        res.json({success:true,result:result[0]})
+    });
 });
 
 //修改博客

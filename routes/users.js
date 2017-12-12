@@ -50,6 +50,7 @@ router.post('/',function(req,res,next){
 //获取用户信息
 router.get('/:id', function(req, res, next) {
     //res.send('respond with a resource');
+
     res.json({success:true})
 });
 
