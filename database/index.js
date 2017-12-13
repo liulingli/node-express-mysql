@@ -1,10 +1,10 @@
 let mysql = require("mysql");
 let connection = mysql.createConnection({
-    host : "localhost",
+    host : "sql9.freemysqlhosting.net",
     port: '3306',
-    user : "root",
-    password : "liu107923",
-    database : "test",
+    user : "sql9210308",
+    password : "Rrj8eqc97M",
+    database : "sql9210308",
     multipleStatements: true //允许多条语句查询
 });
 connection.connect();

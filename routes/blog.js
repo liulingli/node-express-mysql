@@ -13,7 +13,7 @@ router.get('/', function(req, res, next) {
     let start = (curPage - 1)*pageSize;
     let sql = 'SELECT COUNT(*) FROM blog;SELECT * FROM blog limit ' + start +','+pageSize;
     connection.query(sql,function (err, result) {
-        // console.log(err,result)
+        console.log(err,result)
         if(err){
             res.json({success:false,message:err.message,result:result});
             return;
