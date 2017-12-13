@@ -1,9 +1,31 @@
-let express = require('express');
-let router = express.Router();
-let connection = require('../database');
-let uuid = require('../public/uuid');
+import express from 'express';
+import moment from 'moment';
+import Sequelize from 'sequelize';
+import sequelizeModal from '../database';
+import uuid from '../public/uuid';
 
-/* GET users listing. */
+let router = express.Router();
+
+// 一条记录对应一个用户对象
+let User = sequelizeModal.define('user', {
+    timestamps: true,
+    id: {
+        type: Sequelize.NUMBER,
+        primaryKey: true,
+        unique: true,
+        allowNull: false
+    },
+    userName:{
+        type: Sequelize.STRING,
+        unique: true,
+        allowNull: false
+    },
+    trueName: Sequelize.STRING,
+    password: Sequelize.STRING,
+    mail: Sequelize.STRING,
+    phone: Sequelize.NUMBER,
+});
+
 //获取用户列表
 router.get('/', function(req, res, next) {
     let pageSize = req.query.pageSize||20;
@@ -11,19 +33,11 @@ router.get('/', function(req, res, next) {
     if(!curPage){
       res.json({success:false,code:-1,message:"没有传入参数curPage"})   //
     }
-    let start = (curPage - 1)*pageSize;
-    let sql = 'SELECT COUNT(*) FROM users;SELECT * FROM users limit ' + start +','+pageSize;
-    connection.query(sql,function (err, result) {
-       // console.log(err,result)
-        if(err){
-            res.json({success:false,message:err.message,result:result});
-            return;
-        }
-      // 计算总记录
-      let allCount = result[0][0]['COUNT(*)'];
-      let userList = result[1];
-        res.json({success:true,message:'成功',result:{total:allCount,curPage:curPage,list:userList}})
-    });
+    User.findAll({ offset: 5, limit: 5 }).then(function(response){
+
+    }).catch(function(error){
+
+    })
 });
 
 //新增用户
@@ -56,29 +70,24 @@ router.get('/:id', function(req, res, next) {
 
 //修改用户
 router.put('/',function(req,res,next){
-    //更新数据
-    let updateSql = "UPDATE users SET name=?,url=? WHERE id=?";
-    let updateParams = ['菜鸟移动站','https://m.runoob.com',0];
-    connection.query(updateSql,updateParams,function (err, result) {
-        if(err){
-            console.log('[UPDATE ERROR] - ',err.message);
-            return;
+    User.update(req.body, {
+        where:{
+            id: res.body.id
         }
-        res.json({success:true})
+    }).then(function(result){
+        res.json({success:true,result:result})
     });
-})
+});
 
 //删除用户
 router.delete('/:id',function(req,res,next){
-    let delSql = 'DELETE FROM users where user_id='+req.params.id;
-    connection.query(delSql,function (err, result) {
-        if(err){
-            console.log('[DELETE ERROR] - ',err.message);
-            return;
+    User.destroy({
+        where:{
+            id: req.params.id
         }
-        res.json({success:true,message:"删除成功"})
+    }).then(function(result){
+        res.json({success:true,result:result})
     });
-
-})
+});
 
 module.exports = router;

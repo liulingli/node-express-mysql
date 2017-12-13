@@ -13,24 +13,8 @@ let blog = require('./routes/blog');
 let app = express();
 
 let mysql = require("mysql");
-/*let connection = mysql.createConnection({
-    host : "localhost",
-    port: '3306',
-    user : "root",
-    password : "liu107923",
-    database : "test"
-});*/
-let connection = mysql.createConnection({
-    host : "sql9.freemysqlhosting.net",
-    port: '3306',
-    user : "sql9210308",
-    password : "Rrj8eqc97M",
-    database : "sql9210308"
-});
+let connection = require('./database');
 
-connection.connect();
-
-// view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
 
