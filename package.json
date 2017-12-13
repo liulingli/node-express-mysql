@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start": "node ./bin/www"
+    "start": "babel-node ./bin/www"
   },
   "dependencies": {
     "body-parser": "~1.18.2",
@@ -16,7 +16,20 @@
     "moment": "^2.19.4",
     "morgan": "~1.9.0",
     "mysql": "^2.15.0",
+    "mysql2": "^1.5.1",
     "sequelize": "^4.28.0",
     "serve-favicon": "~2.4.5"
+  },
+  "devDependencies": {
+    "babel-cli": "~6.3.17",
+    "babel-core": "~6.3.26",
+    "babel-plugin-syntax-object-rest-spread": "^6.3.13",
+    "babel-plugin-transform-es2015-destructuring": "^6.23.0",
+    "babel-plugin-transform-es2015-modules-commonjs": "^6.26.0",
+    "babel-plugin-transform-es2015-parameters": "^6.24.1",
+    "babel-plugin-transform-es2015-spread": "^6.22.0",
+    "babel-plugin-transform-object-rest-spread": "^6.3.13",
+    "babel-plugin-transform-strict-mode": "^6.24.1",
+    "babel-polyfill": "^6.3.14"
   }
 }

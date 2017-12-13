@@ -1,17 +1,16 @@
-let express = require('express');
-let path = require('path');
-let favicon = require('serve-favicon');
-let logger = require('morgan');
-let cookieParser = require('cookie-parser');
-let bodyParser = require('body-parser');
-let lessMiddleware = require('less-middleware');
-let token = require('./public/token');
-let index = require('./routes/index');
-let users = require('./routes/users');
-let blog = require('./routes/blog');
+import express from 'express';
+import path from 'path';
+import favicon from 'serve-favicon';
+import logger from 'morgan';
+import cookieParser from 'cookie-parser';
+import bodyParser from 'body-parser';
+import lessMiddleware from 'less-middleware';
+import token from './public/token';
+import { indexRouter } from './routes/index';
+import { User, userRouter} from './routes/user';
+import { Blog, blogRouter }  from './routes/blog';
 
 let app = express();
-
 let mysql = require("mysql");
 let connection = require('./database');
 
@@ -37,9 +36,9 @@ app.use('/users',function(req,res,next){
     next();
 });
 
-app.use('/', index);
-app.use('/users', users);
-app.use('/blog', blog);
+app.use('/', indexRouter);
+app.use('/users', userRouter);
+app.use('/blog', blogRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
@@ -63,6 +62,6 @@ let server = app.listen(8084,'localhost', function () {
     let host = server.address().address;
     let port = server.address().port;
     console.log("访问地址为 http://%s:%s", host, port)
-})
+});
 
-module.exports = app;
+export default app;
