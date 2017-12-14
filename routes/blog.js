@@ -1,6 +1,6 @@
 import express from 'express';
 import moment from 'moment';
-import { Sequelize, DataTypes}  from 'sequelize';
+import { Sequelize }  from 'sequelize';
 import sequelizeModal from '../database';
 import { User } from './user'
 
@@ -9,32 +9,33 @@ let blogRouter = express.Router();
 // 一条记录对应一个博客对象
 let Blog = sequelizeModal.define('blog', {
     id: {
-        type: DataTypes.INTEGER,
+        type: Sequelize.INTEGER,
         primaryKey: true,
         unique: true,
         allowNull: false,
         autoIncrement: true
     },
     userId: {
-        type: DataTypes.INTEGER,
+        type: Sequelize.INTEGER,
         references: {
             model: User, // 这是引用另一个模型
             key: 'id' // 这是引用模型的列名称
         }
     },
-    author: DataTypes.STRING,
-    title: DataTypes.STRING,
-    content: DataTypes.TEXT,
-    tags: DataTypes.STRING,
-    createAt: DataTypes.DATE,
-    publishAt: DataTypes.DATE,
-    readCount: DataTypes.INTEGER
+    author: Sequelize.TEXT,
+    status: Sequelize.INTEGER, // 1已发布，2未发布
+    title: Sequelize.TEXT,
+    content: Sequelize.TEXT,
+    tags: Sequelize.TEXT,
+    publishAt: Sequelize.DATE,
+    readCount: Sequelize.INTEGER
 });
 
 //新增博客
 blogRouter.post('/',function(req,res,next){
     let options = req.body;
-    Blog.sync({force: true}).then(() => {
+    options.status = 1;
+    Blog.sync({force: false}).then(() => {
         // 表已创建
         return Blog.create(options).then(function(response){
             res.json({success:true, result:response})
@@ -52,50 +53,92 @@ blogRouter.get('/', function(req, res, next) {
     if(!curPage){
         res.json({success:false,code:-1,message:"没有传入参数curPage"})
     }
-    Blog.findAndCountAll({
-        offset: curPage,
-        limit: pageSize
-    }).then(function(response){
-        res.json({success:true, result:response})
-    }).catch(function(error){
-        res.json({success:false, result:err})
+    Blog.sync({force: false}).then(()=>{
+        Blog.findAndCountAll({
+            offset: curPage - 1,
+            limit: parseInt(pageSize)
+        }).then(function(response){
+            res.json({success:true, result:{total:response.count, list:response.rows}})
+        }).catch(function(err){
+            res.json({success:false, result:err})
+        })
     })
 });
 
 
 //获取博客信息
 blogRouter.get('/:id', function(req, res, next) {
-    Blog.findAll({
-        where: {
-            id: req.params.id
-        },
-    }).then(function(response){
-        res.json({success:true, result:response})
-    }).catch(function(err){
-        res.json({success:false, result:err})
+    Blog.sync({force: false}).then(()=>{
+        Blog.findAll({
+            where: {
+                id: req.params.id
+            },
+        }).then(function(response){
+            res.json({success:true, result:response})
+        }).catch(function(err){
+            res.json({success:false, result:err})
+        })
     })
 });
 
 //修改博客
-blogRouter.put('/',function(req,res,next){
-    Blog.update(req.body, {
-        where:{
-            id: res.body.id
-        }
-    }).then(function(result){
-        res.json({success:true,result:result})
-    });
+blogRouter.put('/:id',function(req,res,next){
+    Blog.sync({force: false}).then(()=> {
+        Blog.update(req.query, {
+            where: {
+                id: req.params.id
+            }
+        }).then(function (result) {
+            res.json({success: true, result: result})
+        });
+    })
+});
+
+//发布博客
+blogRouter.put('/:id/publish',function(req,res,next){
+    const publishAt = new Date();
+    const option = {
+        status: 2,
+        publishAt:publishAt
+    };
+    Blog.sync({force: false}).then(()=> {
+        Blog.update(option, {
+            where: {
+                id: req.params.id
+            }
+        }).then(function (result) {
+            res.json({success: true, result: result})
+        });
+    })
+});
+
+//撤销发布博客
+blogRouter.put('/:id/unPublish',function(req,res,next){
+    const option = {
+        status: 1
+    };
+    Blog.sync({force: false}).then(()=> {
+        Blog.update(option, {
+            where: {
+                id: req.params.id
+            }
+        }).then(function (result) {
+            res.json({success: true, result: result})
+        });
+    })
 });
 
 //删除博客
 blogRouter.delete('/:id',function(req,res,next){
-    Blog.destroy({
-        where:{
-            id: req.params.id
-        }
-    }).then(function(result){
-        res.json({success:true,result:result})
-    });
+    Blog.sync({force: false}).then(()=> {
+        Blog.destroy({
+            where: {
+                id: req.params.id
+            }
+        }).then(function (result) {
+            res.json({success: true, result: result})
+        });
+    })
 });
 
 export  { blogRouter, Blog };

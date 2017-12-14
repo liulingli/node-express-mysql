@@ -1,6 +1,6 @@
 import express from 'express';
 import moment from 'moment';
-import { Sequelize, DataTypes}  from 'sequelize';
+import { Sequelize }  from 'sequelize';
 import sequelizeModal from '../database';
 import uuid from '../public/uuid';
 
@@ -8,28 +8,28 @@ let userRouter = express.Router();
 // 一条记录对应一个用户对象
 let User = sequelizeModal.define('user', {
     id: {
-        type: DataTypes.INTEGER,
+        type: Sequelize.INTEGER,
         primaryKey: true,
         unique: true,
         allowNull: false,
         autoIncrement: true
     },
     userName:{
-        type: DataTypes.STRING,
+        type: Sequelize.STRING,
         unique: true,
         allowNull: false
     },
     trueName: {
-        type: DataTypes.STRING
+        type: Sequelize.STRING
     },
     password: {
-        type: DataTypes.STRING
+        type: Sequelize.STRING
     },
     mail: {
-        type: DataTypes.STRING
+        type: Sequelize.STRING
     },
     phone: {
-        type: DataTypes.INTEGER
+        type: Sequelize.INTEGER
     },
 });
 
